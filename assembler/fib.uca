@@ -1,0 +1,24 @@
+;
+; Fills RAM with Fibonacci numbers
+;
+	ORG	0
+
+; prepare initial values
+
+	LDI	0
+	STA	%IX	; IX = 0
+	STA	%IY	; IY = 0
+	LDI	1	;
+	STA	@IY+	; a_0 at %00
+	STA	@IY	; b_0 at %01
+
+; main loop
+
+$1	LDA	@IX+	; acc = a_i
+	ADA	@IY+	; acc = a_i + b_i
+	STA	@IY
+	BNC	$1	; branch if no carry
+
+; loop forever at the end
+
+$2	JMP	$2
