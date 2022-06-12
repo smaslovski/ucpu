@@ -317,7 +317,7 @@ next_line:
 
     if (!syntax_error && !second_pass) {
         rewind(src_file);
-	rewind(lst_file);
+	freopen(NULL, "w", lst_file);
 
 	fprintf(lst_file, " ---- Source file: %s. Second pass assembler listing. ----\n\n", argv[1]);
 
