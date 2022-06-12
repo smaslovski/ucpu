@@ -85,7 +85,7 @@ assign ram_addr = abus;
 assign ram_data = dbus;
 //assign wr_en    = sta_op;
 
-/////// extension: STX instuction ////////
+/////// extension: STX instruction ///////
 assign wr_en    = sta_op | ext_op;
 //////////////////////////////////////////
 
@@ -209,13 +209,13 @@ begin
       PC <= next_pc;
       if (acc_wr)
         Acc <= acc_mux;
-          if (ix_wr)
+      if (ix_wr)
         IX  <= idx_new;
-          if (iy_wr)
+      if (iy_wr)
         IY  <= idx_new;
-          if (zf_wr)
+      if (zf_wr)
         ZF  <= ~|alu_res;
-          if (cf_wr)
+      if (cf_wr)
         CF  <= alu_c;
     end
 end

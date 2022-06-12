@@ -272,7 +272,7 @@ print_listing:
 	putatpos(NULL, 0, "%4u:   %02X", line_cnt, pc);
 
 	if (parser_state >= OPERAND && opcode < ORG)
-    	    putatpos(NULL, 12, "%03X", rom[pc]);
+	    putatpos(NULL, 12, "%03X", rom[pc]);
 
 	if (lnum != INVALID)
 	    putatpos(NULL, 24, "$%u", lnum);
@@ -316,7 +316,7 @@ next_line:
     /* do second pass */
 
     if (!syntax_error && !second_pass) {
-        rewind(src_file);
+	rewind(src_file);
 	freopen(NULL, "w", lst_file);
 
 	fprintf(lst_file, " ---- Source file: %s. Second pass assembler listing. ----\n\n", argv[1]);
