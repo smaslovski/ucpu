@@ -156,7 +156,7 @@ second_pass:
 	unsigned operand = 0;
         enum {LABEL, MNEMONIC, OPERAND, COMMENT} parser_state = LABEL;
 	static const char *delim = " \t\n";
-	static const char *format_str = "Syntax error: %s \"%s\". The source line is ignored.\n%4u:\t\t\t%s";
+	static const char *format_str = "Syntax error: %s \"%s\". The following source line is ignored.\n%4u:\t\t\t%s";
 
 	src_line = strdup(line_buf);
 	str_toupper(src_line);
@@ -234,18 +234,18 @@ second_pass:
 			}
 			if (*p == '%') {
 			    if (!second_pass && optype != REG) {
-				msg = "not allowed reg operand";
+				msg = "not allowed or incorrect operand";
 				goto syntax_error;
 			    }
 			    ++p;
 			} else
 			    if (!second_pass && optype == REG) {
-				msg = "reg operand reguired, possibly add \"%%\" prefix to";
+				msg = "reg operand reguired, possibly add \"%\" prefix to";
 				goto syntax_error;
 			    }
 			operand = parse_label(p, 16, 2, 0xff);
 			if (!second_pass && operand == INVALID) {
-			    msg = "incorrect operand";
+			    msg = (optype == REG && --p) ? "incorrect reg operand" : "incorrect operand";
 			    goto syntax_error;
 			}
 			if (opcode == ORG)
@@ -271,8 +271,10 @@ print_listing:
 
 	putatpos(NULL, 0, "%4u:   %02X", line_cnt, pc);
 
-	if (parser_state >= OPERAND && opcode < ORG)
+	if (parser_state >= OPERAND && opcode < ORG) {
 	    putatpos(NULL, 12, "%03X", rom[pc]);
+	    ++pc;
+	}
 
 	if (lnum != INVALID)
 	    putatpos(NULL, 24, "$%u", lnum);
@@ -283,9 +285,6 @@ print_listing:
 		putatpos(NULL, 40, "$%u", olnum);
 	    else
 		putatpos(NULL, 40, optype == REG ? "%%%02X" : "%3.02X", operand);
-
-	    if (opcode < ORG)
-		++pc;
 	}
 
 	if (comment != NULL)
@@ -329,14 +328,13 @@ next_line:
     fclose(lst_file);
 
     if (syntax_error > 0) {
-	fprintf(stderr, "There were %d syntax error(s), object file was not generated. Check listing file.\n", syntax_error);
+	fprintf(stderr, "There were %d syntax error(s), hex file was not generated. Check listing file.\n", syntax_error);
 	return 1;
     }
 
     if (other_error > 0 || warning > 0) {
 	fprintf(stderr, "There were %d warning(s) and %d error(s). Check listing file.\n", warning, other_error);
     }
-
 
     hex_file = fopen(argv[3], "w");
 
