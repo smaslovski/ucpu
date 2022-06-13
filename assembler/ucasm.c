@@ -71,7 +71,7 @@ const indreg_t indreg[9] = {
     {"@IX+", 0xfc},
     {"@IY+", 0xfd},
     {"@-IX", 0xfe},
-    {"@-YY", 0xff},
+    {"@-IY", 0xff},
     {NULL, INVALID}
 };
 
