@@ -70,10 +70,10 @@ inout  wire  [7:0] ram_data;
 output wire        wr_en;
 output wire  [7:0] rom_addr, ram_addr;
 
-reg        [7:0]  PC;      // program counter
-reg        [7:0]  IX, IY;  // index registers
-reg signed [7:0]  Acc;     // accumulator
-reg               CF, ZF;  // flags
+reg [7:0]  PC;      // program counter
+reg [7:0]  IX, IY;  // index registers
+reg [7:0]  Acc;     // accumulator
+reg        CF, ZF;  // flags
 
 wire [11:0] ID;      // internal instruction data bus
 wire  [7:0] abus;    // internal RAM address bus
@@ -141,7 +141,7 @@ always @*
       idx_new = idx + 1'b1;
     if (dec_mod)
       idx_new = idx - 1'b1;
-    end
+  end
 
 // bus control
 
@@ -162,9 +162,9 @@ assign dbus =  sta_op ? Acc : (ext_op ? X : 8'bz);
 
 // ALU logic
 
-wire signed [7:0] alu_arg = imm_bit ? imm_dat : ram_data;
-reg         [7:0] alu_res;
-reg               alu_c;
+wire [7:0] alu_arg = imm_bit ? imm_dat : ram_data;
+reg  [7:0] alu_res;
+reg        alu_c;
 
 always @*
 begin
@@ -172,8 +172,8 @@ begin
   case ( op[1:0] )
     2'b00: alu_res = Acc & alu_arg;
     2'b01: alu_res = Acc ^ alu_arg;
-    2'b10: {alu_c, alu_res} = Acc + alu_arg; // signed add
-    2'b11: {alu_c, alu_res} = Acc - alu_arg; // signed sub
+    2'b10: {alu_c, alu_res} = Acc + alu_arg;
+    2'b11: {alu_c, alu_res} = Acc - alu_arg;
   endcase
 end
 
