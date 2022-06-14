@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
     src_file = fopen(argv[1], "r");
     lst_file = fopen(argv[2], "w");
 
-    fprintf(lst_file, " ---- Source file: %s. Fist pass assembler listing. ----\n\n", argv[1]);
+    fprintf(lst_file, " ---- Source file: %s. First pass assembler listing. ----\n\n", argv[1]);
 
 second_pass:
 
