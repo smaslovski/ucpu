@@ -124,7 +124,10 @@ wire cf_wr =  alu_op & op[1];
 
 // indirect addressing and autoincrement/decrement logic
 
-wire ind_mod = ~imm_bit & &imm_dat[7:3] & |imm_dat[2:1];
+//wire ind_mod =  ~imm_bit & ~bnc_op & &imm_dat[7:3] & |imm_dat[2:1];
+/////// extension: STX instruction ///////
+wire ind_mod =  ((~imm_bit & ~bnc_op) | ext_op) & &imm_dat[7:3] & |imm_dat[2:1];
+//////////////////////////////////////////
 wire inc_dec =  ind_mod &  imm_dat[2];
 wire dec_mod =  inc_dec &  imm_dat[1];
 wire inc_mod =  inc_dec & ~imm_dat[1];
