@@ -4,9 +4,11 @@
  *
  * Source line BNF syntax:
  *
- * <source-line>   ::= <opt-label> <mnemonic> <operand> <opt-comment> | <opt-label> ";" <opt-comment> | <opt-label> | ""
+ * <source-line>   ::= <opt-label> <mnem-or-dir> <operand> <opt-comment> | <opt-label> ";" <opt-comment> | <opt-label> | ""
  * <opt-label>     ::= <$-prefixed-dec> | ""
+ * <mnem-or-dir>   ::= <mnemonic> | <directive>
  * <mnemonic>      ::= "ANA" | "ANI" | "XRA" | "XRI" | "ADA" | "ADI" | "SBA" | "SBI" | "BNC" | "BNZ" | "JPR" | "JMP" | "LDA" | "LDI" | "STA" | "STX"
+ * <directive>     ::= "ORG"
  * <operand>       ::= <two-hex> | <%-prefixed-two-hex> | "%IX" | "%IY" | <$-prefixed-dec> | <indir-modes>
  * <indir-modes>   ::= "@IX" | "@IY" | "@IX+" | "@IY+" | "@-IX" | "@-IY"
  * <opt-comment>   ::= <comment-text> | ""
@@ -22,8 +24,12 @@
 #include <string.h>
 #include <ctype.h>
 
+/* size of input line buffer */
 #define LINE_WIDTH 256
-#define LST_LINE_WIDTH (2*LINE_WIDTH)
+
+/* buffer size for the listing file line */
+#define LST_LINE_WIDTH (LINE_WIDTH+64)
+
 #define INVALID ((unsigned)-1)
 
 typedef enum {REG, IMM, LAB, IND} operand_t;
@@ -201,7 +207,7 @@ second_pass:
 		    continue;
 		case OPERAND:
 		    if (*p == '$') {
-			if (!second_pass && optype != LAB) {
+			if (!second_pass && optype != LAB && optype != IMM) {
 			    msg = "incorrect operand";
 			    goto syntax_error;
 			}
