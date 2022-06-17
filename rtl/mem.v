@@ -8,7 +8,7 @@ output wire [11:0] dbus;
 
 reg [11:0] mem[0:255];
 
-assign dbus = en ? mem[abus] : 8'bz;
+assign dbus = en ? mem[abus] : 12'bz;
 
 initial
   $readmemh("fib.hex", mem, 0, 255);
