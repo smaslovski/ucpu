@@ -82,7 +82,7 @@ const indreg_t indreg[9] = {
 };
 
 void str_toupper(char *p) {
-    while (!*p) {
+    while (*p) {
 	*p = toupper(*p);
 	++p;
     }
