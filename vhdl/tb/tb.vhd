@@ -39,7 +39,7 @@ begin
     ", rom_addr: " & h(rom_addr) & ", rom_data: " & s(rom_data) &
     ", ram_addr: " & h(ram_addr) & ", ram_data: " & h(ram_data) & ", wr_en: " & s(wr_en));
   writeline(output, log_line);
-end process write_log;
+end postponed process write_log;
 
 fin: process begin
   wait for 70*20 ns; finish;
